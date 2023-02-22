@@ -1,6 +1,6 @@
 module.exports = {
-  HOST: "cs602.mysql.database.azure.com",
+  HOST: "bu-course.mysql.database.azure.com",
   USER: "dingnan",
-  PASSWORD: "123456",
-  DB: "testdb",
+  PASSWORD: "@ddtest123",
+  DB: "cs602",
 };

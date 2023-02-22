@@ -119,3 +119,14 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All Tutorials were deleted successfully!` });
   });
 };
+
+// find all published Tutorials
+exports.test = (req, res) => {
+  Tutorial.test((err, data) => {
+    if (err)
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving tutorials.",
+      });
+    else res.send(data);
+  });
+};
