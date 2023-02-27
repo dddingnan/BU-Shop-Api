@@ -19,3 +19,11 @@ CREATE TABLE Product (
      updatedBy nvarchar(30) NOT NULL,
      PRIMARY KEY (productID)
 );
+
+CREATE TABLE Cart (
+     cartID int NOT NULL AUTO_INCREMENT,
+     userID nvarchar(30) NOT NULL,
+     productID int NOT NULL,
+     stock int NOT NULL,
+     PRIMARY KEY (cartID)
+);

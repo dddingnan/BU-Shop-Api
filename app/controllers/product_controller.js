@@ -6,7 +6,7 @@ exports.findAllProduct = (req, res) => {
   Product.getAllproduct(name, (err, data) => {
     if (err)
       res.status(500).send({
-        message: err.message || "Some error occurred while retrieving tutorials.",
+        message: err.message || "Some error occurred while retrieving products.",
       });
     else res.send(data);
   });

@@ -23,7 +23,6 @@ Product.getAllproduct = (name, result) => {
       result(null, err);
       return;
     }
-    console.log("products: ", res);
     result(null, res);
   });
 };
