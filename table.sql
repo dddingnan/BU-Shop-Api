@@ -3,5 +3,7 @@ CREATE TABLE User (
      name nvarchar(50) NOT NULL,
      email nvarchar(100) NOT NULL,
      photoUrl nvarchar(250) NOT NULL,
+     status BOOLEAN,
+     isAdmin BOOLEAN,
      PRIMARY KEY (userID)
 );
