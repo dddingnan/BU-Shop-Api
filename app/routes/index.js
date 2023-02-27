@@ -1,15 +1,16 @@
 module.exports = (app) => {
   const users = require("../controllers/user_controller.js");
+  const products = require("../controllers/product_controller.js");
   const tutorials = require("../controllers/tutorial.controller.js");
 
   var router = require("express").Router();
 
   // ******User api******
   // Create new User
-  router.post("/user", users.create);
+  router.post("/user", users.createUser);
 
   // Retrieve single User with id
-  router.get("/user/:id", users.findOne);
+  router.get("/user/:id", users.findSingleUser);
 
   // Update user status
   router.put("/user/:id", users.updateUserStatus);
@@ -19,9 +20,14 @@ module.exports = (app) => {
   router.put("/user/:id/admin", users.updateUserAdminStatus);
 
   // ******Product api******
-  // Create a product for admin only - POST
-  // Get product by 10 each - GET
-  // Update product detail included price, name, url, stock for admin user only - PUT
+  // Create new product (admin only)
+  router.post("/product/:id", products.createProduct);
+
+  // Get all products
+  router.get("/products", products.findAllProduct);
+
+  // Update product (admin only)
+  router.put("/product/:id", products.updateProduct);
 
   // // Create a new Tutorial
   // router.post("/", tutorials.create);

@@ -1,7 +1,7 @@
 const User = require("../models/user_model.js");
 
 // Find a single User by Id
-exports.findOne = (req, res) => {
+exports.findSingleUser = (req, res) => {
   User.findById(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -12,7 +12,7 @@ exports.findOne = (req, res) => {
 };
 
 // Create and Save a new User
-exports.create = (req, res) => {
+exports.createUser = (req, res) => {
   // Validate request
   if (!req.body || !req.body.userID || !req.body.name || !req.body.email || !req.body.photoUrl) {
     res.status(400).send({
