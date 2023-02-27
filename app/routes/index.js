@@ -4,12 +4,24 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // User api
-  // Create a new User
+  // ******User api******
+  // Create new User
   router.post("/user", users.create);
 
-  // Retrieve a single Tutorial with id
+  // Retrieve single User with id
   router.get("/user/:id", users.findOne);
+
+  // Update user status
+  router.put("/user/:id", users.updateUserStatus);
+
+  // Update user admin status
+  // Only admin can add product
+  router.put("/user/:id/admin", users.updateUserAdminStatus);
+
+  // ******Product api******
+  // Create a product for admin only - POST
+  // Get product by 10 each - GET
+  // Update product detail included price, name, url, stock for admin user only - PUT
 
   // // Create a new Tutorial
   // router.post("/", tutorials.create);
