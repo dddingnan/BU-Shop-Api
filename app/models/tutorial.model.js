@@ -123,7 +123,6 @@ Tutorial.removeAll = (result) => {
 };
 
 Tutorial.test = (result) => {
-  console.log("55555555", result);
   sql.query("SELECT * FROM user", (err, res) => {
     if (err) {
       console.log("error: ", err);
