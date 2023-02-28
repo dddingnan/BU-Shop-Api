@@ -27,18 +27,35 @@ exports.createCart = (req, res) => {
     });
   }
   // Create a Cart
-  const CartData = new Cart({
+  const cartData = new Cart({
     userID: req.params.id,
     productID: req.body.productID,
     stock: req.body.stock,
   });
 
   // Save Cart in the database
-  Cart.createCart(req.params.id, CartData, (err, data) => {
+  Cart.createCart(req.params.id, cartData, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while creating the Cart.",
       });
     else res.send(data);
+  });
+};
+
+// Delete a Cart with the specified id in the request
+exports.delete = (req, res) => {
+  Cart.remove(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Cart with id ${req.params.userId}.`,
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete Cart with id " + req.params.userId,
+        });
+      }
+    } else res.send({ message: `Cart was deleted successfully!` });
   });
 };

@@ -63,3 +63,26 @@ exports.updateProduct = (req, res) => {
     } else res.send(data);
   });
 };
+
+// Update a Product stock by the id in the request
+exports.updateProductStock = (req, res) => {
+  // Validate Request
+  if (!req.body || !req.params.userId || !req.body.productID || req.body.stock === null) {
+    res.status(400).send({
+      message: "Content can not be empty!",
+    });
+  }
+  Product.updateProductStockById(req.params.userId, new Product(req.body), (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Product with id ${req.body.productID}.`,
+        });
+      } else {
+        res.status(500).send({
+          message: err.message || "Some error occurred while creating the Product.",
+        });
+      }
+    } else res.send(data);
+  });
+};

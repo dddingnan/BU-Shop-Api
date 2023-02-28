@@ -2,7 +2,7 @@ module.exports = (app) => {
   const users = require("../controllers/user_controller.js");
   const products = require("../controllers/product_controller.js");
   const carts = require("../controllers/cart_controller.js");
-  // const tutorials = require("../controllers/tutorial.controller.js");
+  const orders = require("../controllers/order_controller.js");
 
   var router = require("express").Router();
 
@@ -22,22 +22,31 @@ module.exports = (app) => {
 
   // ******Product api******
   // Create new product (admin only)
-  router.post("/product/:id", products.createProduct);
+  router.post("/product/admin/:id", products.createProduct);
 
   // Get all products
   router.get("/products", products.findAllProduct);
 
   // Update product (admin only)
-  router.put("/product/:id", products.updateProduct);
+  router.put("/product/admin/:id", products.updateProduct);
+
+  // Update product stock only
+  router.put("/product/stock/:userId", products.updateProductStock);
 
   // ******Cart api******
   // Create new cart
   router.post("/cart/:id", carts.createCart);
 
-  // Get all products
+  // Get all carts
   router.get("/carts/:id", carts.findAllCart);
 
-  // // Create a new Tutorial
+  // Delete cart
+  router.delete("/cart/:userId", carts.delete);
+
+  // ******Order api******
+  // Create new order
+  router.post("/order/:userId", orders.createOrder);
+
   // router.post("/", tutorials.create);
 
   // router.get("/test", tutorials.test);

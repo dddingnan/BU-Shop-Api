@@ -35,7 +35,7 @@ Cart.getAllCart = (userID, result) => {
 };
 
 Cart.createCart = (userId, newCart, result) => {
-  // Check User is an admin
+  // Check user status is not disabled
   sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -68,6 +68,24 @@ Cart.createCart = (userId, newCart, result) => {
         result(null, { id: carResponse.insertId, ...newCart });
       });
     });
+  });
+};
+
+Cart.remove = (userId, result) => {
+  sql.query("DELETE FROM cart WHERE userID = ?", userId, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.affectedRows == 0) {
+      // not found Cart with the id
+      result({ kind: "not_found" }, null);
+      return;
+    }
+
+    result(null, res);
   });
 };
 

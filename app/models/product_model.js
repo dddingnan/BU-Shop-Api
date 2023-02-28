@@ -82,4 +82,35 @@ Product.updateProductById = (userId, data, result) => {
   });
 };
 
+Product.updateProductStockById = (userId, data, result) => {
+  // Check User is an admin
+  sql.query("SELECT productID, name, description, photoUrl, price, stock FROM product", (err, productResponse) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    const currentProduct = productResponse.find((val) => val.productID === data.productID);
+    const currentStock = currentProduct.stock - data.stock;
+    if (currentStock < 0) {
+      // Check if current order is submit success or not.
+      result({ message: `This product - ${currentProduct.name} is out of stock!` }, null);
+      return;
+    }
+    sql.query("UPDATE product SET stock = ?, updatedBy = ? WHERE ProductID = ?", [currentStock, userId, data.productID], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found Product with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId, ...data });
+    });
+  });
+};
+
 module.exports = Product;
