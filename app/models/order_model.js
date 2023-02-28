@@ -2,36 +2,38 @@ const sql = require("./db.js");
 
 // constructor
 const Order = function (data) {
+  this.orderID = data.orderID;
   this.userID = data.userID;
   this.status = data.status;
   this.orderTime = data.orderTime;
   this.updatedTime = data.updatedTime;
   this.orderDetail = data.orderDetail;
+  this.updatedBy = data.updatedBy;
 };
 
 Order.getAllOrder = (userID, result) => {
   let query = `
-    SELECT Order.OrderID, Order.stock, product.productID, product.name, product.description, product.photoUrl, product.price
-    FROM Order
-    INNER JOIN product ON Order.productID = product.productID
-    where Order.userID = '${userID}'`;
+    SELECT userorder.orderID, userorder.status, orderdetail.productID, product.name, orderdetail.stock, product.price
+    from userorder 
+    INNER JOIN orderdetail ON userorder.orderID = orderdetail.orderID
+    INNER JOIN product ON product.productID = orderdetail.productID
+    where userID = '${userID}'`;
   sql.query(query, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
-    const tempData = [];
-    for (let index = 0; index < res.length; index++) {
-      const element = res[index];
-      const sum = res.filter((val) => val.productID === element.productID).reduce((acc, curr) => acc + curr.stock, 0);
-      tempData.push({
-        ...element,
-        total: sum,
-      });
-    }
-    const uniqueData = [...new Map(tempData.map((item) => [item["productID"], item])).values()];
-    result(null, uniqueData);
+    const groupBy = (items, key) =>
+      items.reduce(
+        (result, item) => ({
+          ...result,
+          [item[key]]: [...(result[item[key]] || []), item],
+        }),
+        {}
+      );
+    const data = groupBy(res, "orderID");
+    result(null, data);
   });
 };
 
@@ -53,7 +55,7 @@ Order.createOrder = (orderData, result) => {
     // If user status is not disabled and stock is avaliable then insert
     const orderQueryString = `
         INSERT INTO userOrder
-        SET userID = '${userID}', status = 0, orderTime = '${currentTime}', updatedTime = '${currentTime};';
+        SET userID = '${userID}', status = 0, orderTime = '${currentTime}', updatedTime = '${currentTime}', updatedBy = '${userID}';
     `;
     sql.query(orderQueryString, (orderError, orderResponse) => {
       if (orderError) {
@@ -79,6 +81,37 @@ Order.createOrder = (orderData, result) => {
         }
         result(null, { orderId, ...orderData });
       });
+    });
+  });
+};
+
+Order.updateOrderStatusById = (userId, data, result) => {
+  // Check User is an admin
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = 1`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    if (!res.length) {
+      // Throw error message if user is not an admin
+      result({ message: "This user has no authority to change orders." }, null);
+      return;
+    }
+    // If user is admin, then update
+    const currentTime = new Date().toJSON().slice(0, 19).replace("T", ":");
+    sql.query("UPDATE userOrder SET status = ?, updatedBy = ?, updatedTime = ?  WHERE orderID = ?", [data.status, userId, currentTime, data.orderID], (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+      if (res.affectedRows == 0) {
+        // not found Order with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      result(null, { userId, ...data });
     });
   });
 };

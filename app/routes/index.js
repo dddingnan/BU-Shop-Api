@@ -47,27 +47,11 @@ module.exports = (app) => {
   // Create new order
   router.post("/order/:userId", orders.createOrder);
 
-  // router.post("/", tutorials.create);
+  // Get all order
+  router.get("/order/:userId", orders.findAllOrder);
 
-  // router.get("/test", tutorials.test);
-
-  // // Retrieve all Tutorials
-  // router.get("/", tutorials.findAll);
-
-  // // Retrieve all published Tutorials
-  // router.get("/published", tutorials.findAllPublished);
-
-  // // Retrieve a single Tutorial with id
-  // router.get("/:id", tutorials.findOne);
-
-  // // Update a Tutorial with id
-  // router.put("/:id", tutorials.update);
-
-  // // Delete a Tutorial with id
-  // router.delete("/:id", tutorials.delete);
-
-  // // Delete all Tutorials
-  // router.delete("/", tutorials.deleteAll);
+  // Update order status
+  router.put("/order/status/:userId", orders.updateOrderStatus);
 
   app.use("/api", router);
 };

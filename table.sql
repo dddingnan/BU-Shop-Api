@@ -34,6 +34,7 @@ CREATE TABLE userOrder (
      status int NOT NULL,
      orderTime nvarchar(30) NOT NULL,
      updatedTime nvarchar(30) NOT NULL,
+     updatedBy nvarchar(30) NOT NULL,
      PRIMARY KEY (orderID)
 );
 
