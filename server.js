@@ -15,7 +15,7 @@ app.use(express.json()); /* bodyParser.json() is deprecated */
 
 app.use(express.urlencoded({ extended: true })); /* bodyParser.urlencoded() is deprecated */
 
-// simple route
+// entry route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to BU-Shop application." });
 });

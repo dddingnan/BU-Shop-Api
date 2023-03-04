@@ -16,6 +16,17 @@
 If you still can not connect to Azure database, please connect to me. I'll do my best to help you out or you just change database config to localhost.
 ```
 
+### Code Structure
+
+```
+Index file: "/server.js"
+Entry route: "/app/routes/index.js"
+
+There is a total of four parts of controllers.
+Each part controls the communication between the model and the database.
+Model manipulates the SQL string and data response.
+```
+
 ### Database Schema
 
 ## ![Database](CS602_BU-shop.png "Database")
