@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const { userStatus } = require("../constant/index.js");
 
 // constructor
 const Order = function (data) {
@@ -40,7 +41,7 @@ Order.getAllOrder = (userID, result) => {
 Order.createOrder = (orderData, result) => {
   // Check user status is not disabled
   const { userID, orderDetail } = orderData;
-  sql.query(`SELECT * FROM user WHERE userID = '${userID}' and status = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userID}' and status = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -87,7 +88,7 @@ Order.createOrder = (orderData, result) => {
 
 Order.updateOrderStatusById = (userId, data, result) => {
   // Check User is an admin
-  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const { userStatus } = require("../constant/index.js");
 
 // constructor
 const Cart = function (data) {
@@ -36,7 +37,7 @@ Cart.getAllCart = (userID, result) => {
 
 Cart.createCart = (userId, newCart, result) => {
   // Check user status is not disabled
-  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -72,20 +73,33 @@ Cart.createCart = (userId, newCart, result) => {
 };
 
 Cart.remove = (userId, result) => {
-  sql.query("DELETE FROM cart WHERE userID = ?", userId, (err, res) => {
+  // Check user status is not disabled
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(err, null);
       return;
     }
-
-    if (res.affectedRows == 0) {
-      // not found Cart with the id
-      result({ kind: "not_found" }, null);
+    if (!res.length) {
+      // Throw error message if user status is disabled
+      result({ message: "This user has no authority to change Carts." }, null);
       return;
     }
+    sql.query("DELETE FROM cart WHERE userID = ?", userId, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
 
-    result(null, res);
+      if (res.affectedRows == 0) {
+        // not found Cart with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+
+      result(null, res);
+    });
   });
 };
 

@@ -14,11 +14,11 @@ module.exports = (app) => {
   router.get("/user/:userId", users.findSingleUser);
 
   // Update user status
-  router.put("/user/:userId", users.updateUserStatus);
+  router.put("/user/admin/status/:userId", users.updateUserStatus);
 
   // Update user admin status
   // Only admin can add product or update order status
-  router.put("/user/:userId/admin", users.updateUserAdminStatus);
+  router.put("/user/admin/adminStatus/:userId", users.updateUserAdminStatus);
 
   // ******Product api******
   // Get all products
@@ -51,7 +51,7 @@ module.exports = (app) => {
   router.get("/order/:userId", orders.findAllOrder);
 
   // Update order status (admin only)
-  router.put("/order/status/:userId", orders.updateOrderStatus);
+  router.put("/order/admin/status/:userId", orders.updateOrderStatus);
 
   app.use("/api", router);
 };

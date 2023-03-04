@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const { userStatus } = require("../constant/index.js");
 
 // constructor
 const User = function (data) {
@@ -11,7 +12,7 @@ const User = function (data) {
 };
 
 User.findById = (userId, result) => {
-  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

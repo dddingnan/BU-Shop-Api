@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const { userStatus, productStatus } = require("../constant/index.js");
 
 // constructor
 const Product = function (data) {
@@ -14,7 +15,7 @@ const Product = function (data) {
 };
 
 Product.getAllproduct = (name, result) => {
-  let query = "SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = 1";
+  let query = `SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = ${productStatus.opened}`;
   if (name) {
     query += ` and name LIKE '%${name}%'`;
   }
@@ -30,7 +31,7 @@ Product.getAllproduct = (name, result) => {
 
 Product.createProduct = (userId, newProduct, result) => {
   // Check User is an admin
-  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -55,7 +56,7 @@ Product.createProduct = (userId, newProduct, result) => {
 
 Product.updateProductById = (userId, data, result) => {
   // Check User is an admin
-  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = 1`, (err, res) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and isAdmin = ${userStatus.true}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -85,7 +86,7 @@ Product.updateProductById = (userId, data, result) => {
 
 Product.updateProductStockById = (userId, data, result) => {
   // Get all product
-  sql.query("SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = 1", (err, productResponse) => {
+  sql.query(`SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = ${productStatus.opened}`, (err, productResponse) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
