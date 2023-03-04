@@ -3,7 +3,8 @@ const Product = require("../models/product_model.js");
 // Retrieve all Products with product status is opened
 exports.findAllProduct = (req, res) => {
   const name = req.query.name;
-  Product.getAllproduct(name, (err, data) => {
+  const description = req.query.description;
+  Product.getAllproduct(name, description, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving products.",

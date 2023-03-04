@@ -14,10 +14,13 @@ const Product = function (data) {
   this.updatedBy = data.updatedBy;
 };
 
-Product.getAllproduct = (name, result) => {
+Product.getAllproduct = (name, description, result) => {
   let query = `SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = ${productStatus.opened}`;
   if (name) {
     query += ` and name LIKE '%${name}%'`;
+  }
+  if (description) {
+    query += ` and description LIKE '%${description}%'`;
   }
   sql.query(query, (err, res) => {
     if (err) {
