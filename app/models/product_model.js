@@ -8,14 +8,15 @@ const Product = function (data) {
   this.photoUrl = data.photoUrl;
   this.price = data.price;
   this.stock = data.stock;
+  this.productStatus = data.productStatus;
   this.createdBy = data.createdBy;
   this.updatedBy = data.updatedBy;
 };
 
 Product.getAllproduct = (name, result) => {
-  let query = "SELECT productID, name, description, photoUrl, price, stock FROM product";
+  let query = "SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = 1";
   if (name) {
-    query += ` WHERE name LIKE '%${name}%'`;
+    query += ` and name LIKE '%${name}%'`;
   }
   sql.query(query, (err, res) => {
     if (err) {
@@ -66,7 +67,7 @@ Product.updateProductById = (userId, data, result) => {
       return;
     }
     // If user is admin, then update
-    sql.query("UPDATE product SET name = ?, description = ?, photoUrl = ?, price = ?, stock = ?, updatedBy = ? WHERE ProductID = ?", [data.name, data.description, data.photoUrl, data.price, data.stock, userId, data.productID], (err, res) => {
+    sql.query("UPDATE product SET name = ?, description = ?, photoUrl = ?, price = ?, stock = ?, productStatus = ?, updatedBy = ? WHERE ProductID = ?", [data.name, data.description, data.photoUrl, data.price, data.stock, data.productStatus, userId, data.productID], (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -83,14 +84,19 @@ Product.updateProductById = (userId, data, result) => {
 };
 
 Product.updateProductStockById = (userId, data, result) => {
-  // Check User is an admin
-  sql.query("SELECT productID, name, description, photoUrl, price, stock FROM product", (err, productResponse) => {
+  // Get all product
+  sql.query("SELECT productID, name, description, photoUrl, price, stock FROM product WHERE productStatus = 1", (err, productResponse) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
       return;
     }
     const currentProduct = productResponse.find((val) => val.productID === data.productID);
+    if (!currentProduct || !currentProduct.stock) {
+      // Throw error message if user is not an admin
+      result({ message: `This product ID - ${data.productID} is not open to order now.` }, null);
+      return;
+    }
     const currentStock = currentProduct.stock - data.stock;
     if (currentStock < 0) {
       // Check if current order is submit success or not.

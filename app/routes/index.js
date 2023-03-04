@@ -10,35 +10,35 @@ module.exports = (app) => {
   // Create new User
   router.post("/user", users.createUser);
 
-  // Retrieve single User with id
-  router.get("/user/:id", users.findSingleUser);
+  // Get single User with id
+  router.get("/user/:userId", users.findSingleUser);
 
   // Update user status
-  router.put("/user/:id", users.updateUserStatus);
+  router.put("/user/:userId", users.updateUserStatus);
 
   // Update user admin status
-  // Only admin can add product
-  router.put("/user/:id/admin", users.updateUserAdminStatus);
+  // Only admin can add product or update order status
+  router.put("/user/:userId/admin", users.updateUserAdminStatus);
 
   // ******Product api******
-  // Create new product (admin only)
-  router.post("/product/admin/:id", products.createProduct);
-
   // Get all products
   router.get("/products", products.findAllProduct);
 
-  // Update product (admin only)
-  router.put("/product/admin/:id", products.updateProduct);
+  // Create new product (admin only)
+  router.post("/product/admin/:userId", products.createProduct);
 
-  // Update product stock only
+  // Update product (admin only)
+  router.put("/product/admin/:userId", products.updateProduct);
+
+  // Update product stock only when order created
   router.put("/product/stock/:userId", products.updateProductStock);
 
   // ******Cart api******
   // Create new cart
-  router.post("/cart/:id", carts.createCart);
+  router.post("/cart/:userId", carts.createCart);
 
   // Get all carts
-  router.get("/carts/:id", carts.findAllCart);
+  router.get("/carts/:userId", carts.findAllCart);
 
   // Delete cart
   router.delete("/cart/:userId", carts.delete);
@@ -47,10 +47,10 @@ module.exports = (app) => {
   // Create new order
   router.post("/order/:userId", orders.createOrder);
 
-  // Get all order
+  // Get all user's order
   router.get("/order/:userId", orders.findAllOrder);
 
-  // Update order status
+  // Update order status (admin only)
   router.put("/order/status/:userId", orders.updateOrderStatus);
 
   app.use("/api", router);

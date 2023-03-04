@@ -1,6 +1,6 @@
 const Product = require("../models/product_model.js");
 
-// Retrieve all Products from the database (with condition).
+// Retrieve all Products with product status is opened
 exports.findAllProduct = (req, res) => {
   const name = req.query.name;
   Product.getAllproduct(name, (err, data) => {
@@ -15,7 +15,7 @@ exports.findAllProduct = (req, res) => {
 // Create and Save a new Product
 exports.createProduct = (req, res) => {
   // Validate request
-  if (!req.body || !req.params.id || !req.body.name || !req.body.description || !req.body.photoUrl || req.body.price === null || req.body.stock === null || !req.body.createdBy || !req.body.updatedBy) {
+  if (!req.body || !req.params.userId || !req.body.name || !req.body.description || !req.body.photoUrl || req.body.price === null || req.body.stock === null || req.body.productStatus === null || !req.body.createdBy || !req.body.updatedBy) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
@@ -27,12 +27,13 @@ exports.createProduct = (req, res) => {
     photoUrl: req.body.photoUrl,
     price: req.body.price,
     stock: req.body.stock,
+    productStatus: req.body.productStatus,
     createdBy: req.body.createdBy,
     updatedBy: req.body.updatedBy,
   });
 
   // Save Product in the database
-  Product.createProduct(req.params.id, ProductData, (err, data) => {
+  Product.createProduct(req.params.userId, ProductData, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while creating the Product.",
@@ -41,15 +42,15 @@ exports.createProduct = (req, res) => {
   });
 };
 
-// Update a Product by the id in the request
+// Update a Product detail
 exports.updateProduct = (req, res) => {
   // Validate Request
-  if (!req.body || !req.params.id || !req.body.productID || !req.body.name || !req.body.description || !req.body.photoUrl || req.body.price === null || req.body.stock === null || !req.body.updatedBy) {
+  if (!req.body || !req.params.userId || !req.body.productID || !req.body.name || !req.body.description || !req.body.photoUrl || req.body.price === null || req.body.stock === null || req.body.productStatus === null || !req.body.updatedBy) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
   }
-  Product.updateProductById(req.params.id, new Product(req.body), (err, data) => {
+  Product.updateProductById(req.params.userId, new Product(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
@@ -64,7 +65,7 @@ exports.updateProduct = (req, res) => {
   });
 };
 
-// Update a Product stock by the id in the request
+// Update a Product stock
 exports.updateProductStock = (req, res) => {
   // Validate Request
   if (!req.body || !req.params.userId || !req.body.productID || req.body.stock === null) {

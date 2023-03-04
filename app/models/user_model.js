@@ -10,8 +10,8 @@ const User = function (data) {
   this.isAdmin = data.isAdmin;
 };
 
-User.findById = (id, result) => {
-  sql.query(`SELECT * FROM user WHERE userID = '${id}' and status = 1`, (err, res) => {
+User.findById = (userId, result) => {
+  sql.query(`SELECT * FROM user WHERE userID = '${userId}' and status = 1`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -39,8 +39,8 @@ User.createUser = (newUser, result) => {
   });
 };
 
-User.updateStatusById = (id, data, result) => {
-  sql.query("UPDATE user SET status = ? WHERE userID = ?", [data.status, id], (err, res) => {
+User.updateStatusById = (userId, data, result) => {
+  sql.query("UPDATE user SET status = ? WHERE userID = ?", [data.status, userId], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -51,23 +51,23 @@ User.updateStatusById = (id, data, result) => {
       result({ kind: "not_found" }, null);
       return;
     }
-    result(null, { id: id, ...data });
+    result(null, { id: userId, ...data });
   });
 };
 
-User.updateAdminStatusById = (id, data, result) => {
-  sql.query("UPDATE user SET isAdmin = ? WHERE userID = ?", [data.isAdmin, id], (err, res) => {
+User.updateAdminStatusById = (userId, data, result) => {
+  sql.query("UPDATE user SET isAdmin = ? WHERE userID = ?", [data.isAdmin, userId], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
     }
     if (res.affectedRows == 0) {
-      // not found User with the id
+      // not found User with the userId
       result({ kind: "not_found" }, null);
       return;
     }
-    result(null, { id: id, ...data });
+    result(null, { id: userId, ...data });
   });
 };
 

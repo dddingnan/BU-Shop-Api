@@ -17,6 +17,7 @@ CREATE TABLE product (
      photoUrl nvarchar(250) NOT NULL,
      price int NOT NULL,
      stock int NOT NULL,
+     productStatus int NOT NULL,
      createdBy nvarchar(30) NOT NULL,
      updatedBy nvarchar(30) NOT NULL,
      PRIMARY KEY (productID)
@@ -56,7 +57,7 @@ VALUES
 
 INSERT INTO product (name, description, photoUrl, price, stock, createdBy, updatedBy) 
 VALUES
-('Cameraa', 'A device for taking still or moving pictures.', 'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c', 100, 88, 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2', 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2'),
+('Camera', 'A device for taking still or moving pictures.', 'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c', 100, 88, 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2', 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2'),
 ('Steak', 'A slice of beef.', 'https://images.unsplash.com/photo-1600891964092-4316c288032e', 90, 82, 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2', 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2'),
 ('Burger', 'A similar sandwich or patty.', 'https://images.unsplash.com/photo-1571091655789-405eb7a3a3a8', 100, 77, 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2', 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2'),
 ('Coffee', 'The powder made by roasting and grinding the seeds.', 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c', 100, 22, 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2', 'x2aV7tc0Kkfxw2lOMZS8Ja0ryVq2'),

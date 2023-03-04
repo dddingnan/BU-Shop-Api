@@ -1,10 +1,10 @@
 ## Project setup
 
+### How to run?
+
 ```
 npm install
 ```
-
-### Run
 
 ```
 node server.js or npm run start

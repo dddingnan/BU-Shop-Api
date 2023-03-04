@@ -2,10 +2,10 @@ const User = require("../models/user_model.js");
 
 // Find a single User by Id
 exports.findSingleUser = (req, res) => {
-  User.findById(req.params.id, (err, data) => {
+  User.findById(req.params.userId, (err, data) => {
     if (err) {
       res.status(500).send({
-        message: "Error retrieving User with id " + req.params.id,
+        message: "Error retrieving User with userId " + req.params.userId,
       });
     } else res.send(data);
   });
@@ -43,21 +43,21 @@ exports.createUser = (req, res) => {
 // Update a User status by the id in the request
 exports.updateUserStatus = (req, res) => {
   // Validate Request
-  if (!req.body || !req.params.id || req.body.status === null) {
+  if (!req.body || !req.params.userId || req.body.status === null) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
   }
 
-  User.updateStatusById(req.params.id, new User(req.body), (err, data) => {
+  User.updateStatusById(req.params.userId, new User(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found User with id ${req.params.id}.`,
+          message: `Not found User with userId ${req.params.userId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Error updating User with id " + req.params.id,
+          message: "Error updating User with userId " + req.params.userId,
         });
       }
     } else res.send(data);
@@ -67,21 +67,21 @@ exports.updateUserStatus = (req, res) => {
 // Update a User admin status by the id in the request
 exports.updateUserAdminStatus = (req, res) => {
   // Validate Request
-  if (!req.body || !req.params.id || req.body.isAdmin === null) {
+  if (!req.body || !req.params.userId || req.body.isAdmin === null) {
     res.status(400).send({
       message: "Content can not be empty!",
     });
   }
 
-  User.updateAdminStatusById(req.params.id, new User(req.body), (err, data) => {
+  User.updateAdminStatusById(req.params.userId, new User(req.body), (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found User with id ${req.params.id}.`,
+          message: `Not found User with userId ${req.params.userId}.`,
         });
       } else {
         res.status(500).send({
-          message: "Error updating User with id " + req.params.id,
+          message: "Error updating User with userId " + req.params.userId,
         });
       }
     } else res.send(data);
