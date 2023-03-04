@@ -1,4 +1,5 @@
 const Order = require("../models/order_model.js");
+const { checkIsXml, fortmatXml } = require("../method/index.js");
 
 // Retrieve all Orders from the database (with condition).
 exports.findAllOrder = (req, res) => {
@@ -8,13 +9,13 @@ exports.findAllOrder = (req, res) => {
       message: "UserID can not be empty!",
     });
   }
-
+  const isXml = checkIsXml(req.headers["content-type"]);
   Order.getAllOrder(req.params.userId, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving Orders.",
       });
-    else res.send(data);
+    else res.send(isXml ? fortmatXml(data) : data);
   });
 };
 

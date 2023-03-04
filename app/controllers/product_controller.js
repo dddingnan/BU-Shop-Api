@@ -1,15 +1,17 @@
 const Product = require("../models/product_model.js");
+const { checkIsXml, fortmatXml } = require("../method/index.js");
 
 // Retrieve all Products with product status is opened
 exports.findAllProduct = (req, res) => {
   const name = req.query.name;
   const description = req.query.description;
+  const isXml = checkIsXml(req.headers["content-type"]);
   Product.getAllproduct(name, description, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving products.",
       });
-    else res.send(data);
+    else res.send(isXml ? fortmatXml(data, "product") : data);
   });
 };
 

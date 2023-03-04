@@ -1,4 +1,5 @@
 const Cart = require("../models/cart_model.js");
+const { checkIsXml, fortmatXml } = require("../method/index.js");
 
 // Retrieve all Carts from the database (with condition).
 exports.findAllCart = (req, res) => {
@@ -8,13 +9,13 @@ exports.findAllCart = (req, res) => {
       message: "UserID can not be empty!",
     });
   }
-
+  const isXml = checkIsXml(req.headers["content-type"]);
   Cart.getAllCart(req.params.userId, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving carts.",
       });
-    else res.send(data);
+    else res.send(isXml ? fortmatXml(data, "cart") : data);
   });
 };
 

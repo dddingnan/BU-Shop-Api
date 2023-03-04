@@ -1,13 +1,15 @@
 const User = require("../models/user_model.js");
+const { checkIsXml, fortmatXml } = require("../method/index.js");
 
 // Find a single User by Id
 exports.findSingleUser = (req, res) => {
+  const isXml = checkIsXml(req.headers["content-type"]);
   User.findById(req.params.userId, (err, data) => {
     if (err) {
       res.status(500).send({
         message: "Error retrieving User with userId " + req.params.userId,
       });
-    } else res.send(data);
+    } else res.send(isXml ? fortmatXml(data, "user") : data);
   });
 };
 
